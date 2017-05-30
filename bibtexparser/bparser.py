@@ -72,14 +72,10 @@ class BibTexParser(object):
         :return: parser
         :rtype: `BibTexParser`
         """
-        self.bib_database = BibDatabase()
-
         #: Load common strings such as months abbreviation
         #: Default: `False`.
         self.common_strings = common_strings
-        if self.common_strings:
-            self.bib_database.load_common_strings()
-
+  
         #: Callback function to process BibTeX entries after parsing,
         #: for example to create a list from a string with multiple values.
         #: By default all BibTeX values are treated as simple strings.
@@ -111,8 +107,6 @@ class BibTexParser(object):
             'subjects': u'subject'
         }
 
-        # Setup the parser expression
-        self._init_expressions()
 
     def parse(self, bibtex_str, partial=False):
         """Parse a BibTeX string into an object
@@ -125,6 +119,15 @@ class BibTexParser(object):
         :return: bibliographic database
         :rtype: BibDatabase
         """
+        self.bib_database = BibDatabase()
+
+        #: Load common strings such as months abbreviation
+        if self.common_strings:
+            self.bib_database.load_common_strings()
+
+        # Setup the parser expression
+        self._init_expressions()
+
         bibtex_file_obj = self._bibtex_file_obj(bibtex_str)
         try:
             self._expr.parseFile(bibtex_file_obj)
